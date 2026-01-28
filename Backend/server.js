@@ -8,14 +8,12 @@ const { initWebSocket, broadcast } = require("./websocket");
 const app = express();
 app.use(express.json());
 
-/* ===== RATE LIMIT (BONUS) ===== */
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 100
 });
 app.use(limiter);
 
-/* ===== API KEY AUTH (BONUS) ===== */
 function auth(req, res, next) {
   const key = req.headers["x-api-key"];
   if (!key || key !== process.env.API_KEY) {
@@ -24,7 +22,6 @@ function auth(req, res, next) {
   next();
 }
 
-/* ===== HEALTH CHECK (BONUS) ===== */
 app.get("/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
@@ -34,7 +31,7 @@ app.get("/health", async (req, res) => {
   }
 });
 
-/* ===== INSERT COMMAND ===== */
+
 async function insertCommand(command, device_id = "default_led") {
   const result = await pool.query(
     `INSERT INTO light_commands(command, device_id)
