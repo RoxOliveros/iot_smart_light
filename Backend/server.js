@@ -42,7 +42,7 @@ async function insertCommand(command, device_id = "default_led") {
   return result.rows[0];
 }
 
-/* ===== ENDPOINT 1: ON ===== */
+
 app.post("/api/lights/on", auth, async (req, res) => {
   try {
     const device = req.body.device_id || "default_led";
@@ -53,7 +53,7 @@ app.post("/api/lights/on", auth, async (req, res) => {
   }
 });
 
-/* ===== ENDPOINT 2: OFF ===== */
+
 app.post("/api/lights/off", auth, async (req, res) => {
   try {
     const device = req.body.device_id || "default_led";
@@ -64,7 +64,7 @@ app.post("/api/lights/off", auth, async (req, res) => {
   }
 });
 
-/* ===== ENDPOINT 3: STATUS ===== */
+
 app.get("/api/lights/status", async (req, res) => {
   try {
     const device = req.query.device_id || "default_led";
@@ -88,7 +88,7 @@ app.get("/api/lights/status", async (req, res) => {
   }
 });
 
-/* ===== ENDPOINT 4: HISTORY ===== */
+
 app.get("/api/lights/history", async (req, res) => {
   try {
     const device = req.query.device_id || "default_led";
@@ -104,7 +104,6 @@ app.get("/api/lights/history", async (req, res) => {
   }
 });
 
-/* ===== START SERVER ===== */
 const server = http.createServer(app);
 initWebSocket(server);
 
