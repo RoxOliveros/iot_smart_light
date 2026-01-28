@@ -5,4 +5,13 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+pool.on("connect", () => {
+  console.log("PostgreSQL connected");
+});
+
+pool.on("error", err => {
+  console.error("Unexpected PG error", err);
+  process.exit(1);
+});
+
 module.exports = pool;
