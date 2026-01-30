@@ -5,6 +5,27 @@ const pool = require("./db");
 const http = require("http");
 const { initWebSocket, broadcast } = require("./websocket");
 
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS light_commands (
+        id SERIAL PRIMARY KEY,
+        command TEXT NOT NULL CHECK (command IN ('ON', 'OFF')),
+        timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        device_id TEXT DEFAULT 'default_led'
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_timestamp
+      ON light_commands(timestamp DESC);
+    `);
+
+    console.log("✅ light_commands table ready");
+  } catch (err) {
+    console.error("❌ DB init error:", err.message);
+  }
+})();
+
+
 const app = express();
 app.use(express.json());
 
@@ -100,8 +121,12 @@ app.get("/api/lights/history", async (req, res) => {
     );
     res.json(result.rows);
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
-  }
+  console.error("DB ERROR:", err);
+  res.status(500).json({
+    error: "Database error",
+    detail: err.message
+  });
+}
 });
 
 const server = http.createServer(app);
