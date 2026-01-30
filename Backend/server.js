@@ -48,8 +48,12 @@ app.get("/health", async (req, res) => {
     await pool.query("SELECT 1");
     res.json({ status: "OK", database: "connected" });
   } catch (err) {
-    res.status(500).json({ status: "ERROR", database: "disconnected" });
-  }
+  console.error("DB ERROR:", err);
+  res.status(500).json({
+    error: "Database error",
+    detail: err.message
+  });
+}
 });
 
 
@@ -70,8 +74,12 @@ app.post("/api/lights/on", auth, async (req, res) => {
     const row = await insertCommand("ON", device);
     res.json({ success: true, timestamp: row.timestamp });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
-  }
+  console.error("DB ERROR:", err);
+  res.status(500).json({
+    error: "Database error",
+    detail: err.message
+  });
+}
 });
 
 
@@ -81,8 +89,12 @@ app.post("/api/lights/off", auth, async (req, res) => {
     const row = await insertCommand("OFF", device);
     res.json({ success: true, timestamp: row.timestamp });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
-  }
+  console.error("DB ERROR:", err);
+  res.status(500).json({
+    error: "Database error",
+    detail: err.message
+  });
+}
 });
 
 
@@ -105,8 +117,12 @@ app.get("/api/lights/status", async (req, res) => {
       timestamp: result.rows[0].timestamp
     });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
-  }
+  console.error("DB ERROR:", err);
+  res.status(500).json({
+    error: "Database error",
+    detail: err.message
+  });
+}
 });
 
 
